@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+      .visible {opacity: 1}
+      .invisible {opacity: 0}
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <h4 id='typing' class='invisible'>user is typing</h4>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      var form = document.getElementsByTagName('form')[0]
+      form.addEventListener('submit', function(e) {
+         e.preventDefault();
+         var chatMessage = document.getElementById('m');
+         console.log(chatMessage);
+         socket.emit('chat message', chatMessage.value);
+         chatMessage.value = '';
+      });
+      socket.addEventListener('chat message', function(msg) {
+          console.log('chat message event');
+          var messageBox = document.getElementById('messages');
+          var message = document.createElement('li');
+          message.innerHTML = msg;
+          console.log(message);
+          messageBox.appendChild(message);
+          socket.emit('user not typing');
+      });
+      socket.addEventListener('disconnect', function(msg) {
+          var messageBox = document.getElementById('messages');
+          var message = document.createElement('li');
+          message.innerHTML = msg;
+          console.log(message);
+          messageBox.appendChild(message);
+      });
+      window.addEventListener('keypress', function(e) {
+         socket.emit('user typing');
+         setTimeout(function(){
+             socket.emit('user not typing');
+         }, 5000);
+      });
+
+      socket.addEventListener('user typing', function() {
+          console.log('user is typing');
+          document.getElementById('typing').classList.remove('invisible');
+      });
+
+      socket.addEventListener('user not typing', function() {
+          console.log('user not typing');
+          document.getElementById('typing').classList.add('invisible');
+      });
+    </script>
+  </body>
+</html>

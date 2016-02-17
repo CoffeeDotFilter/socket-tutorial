@@ -1,0 +1,25 @@
+{
+  "name": "socket-tutorial",
+  "version": "1.0.0",
+  "description": "a socket io tutorial",
+  "main": "index.js",
+  "scripts": {
+    "nodemon": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/threeLoops/socket-tutorial.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/threeLoops/socket-tutorial/issues"
+  },
+  "homepage": "https://github.com/threeLoops/socket-tutorial#readme",
+  "devDependencies": {
+    "nodemon": "^1.8.1"
+  },
+  "dependencies": {
+    "socket.io": "^1.4.5"
+  }
+}
